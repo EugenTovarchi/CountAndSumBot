@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿using CountAndSumBot.Services;
+using System.Security.Cryptography.X509Certificates;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -46,21 +47,21 @@ internal class TextMessageController
                 await _telegramClient.SendMessage(message.Chat.Id, "Выберите опцию и напишите текст или цифры.", cancellationToken: ct);
                 break;
         }
-        switch (userCommand)
+        if (userCommand == "count")
         {
-            case "count":
-                {
-                    await _telegramClient.SendMessage(message.Chat.Id, $"Длина сообщения: {message.Text.Length} знаков",
-            cancellationToken: ct);
-                    //await _telegramClient.SendMessage(message.From.Id, $"Кол-во ваших символов: {_lengthController.Handle(message, ct)}");
-                    break;
-                }
-            case "sum":
-                {
-                    await _telegramClient.SendMessage(message.From.Id, $"Сумма ваших цифр: {_sumController.Handle(message, ct)}");
-                    break;
-                }
+            await _telegramClient.SendMessage(message.Chat.Id, $"Кол-во ваших символов: {_lengthController.Handle(message, ct)}");
         }
-
+        else if (userCommand == "sum")
+        {
+            await _telegramClient.SendMessage(message.Chat.Id, $"Сумма ваших цифр: {_sumController.Handle(message, ct)}");
+        }
+        else
+        {
+            await _telegramClient.SendMessage(
+                message.Chat.Id,
+                "Выберите действие, используя кнопки ниже.",
+                cancellationToken: ct
+            );
+        }
     }
 }

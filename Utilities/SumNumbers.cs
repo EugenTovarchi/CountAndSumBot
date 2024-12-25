@@ -6,9 +6,9 @@
 public static class SumNumbers
 {
     // вывести на .ToString();
-    public static string Sum(List<double> numbers)
+    public static string Sum(List<int> numbers)
     {
-        double result = numbers.Sum(x => x);
+        int result = numbers.Sum(x => x);
         return $"Сумма ваших чисел: {result}";
     }
 }

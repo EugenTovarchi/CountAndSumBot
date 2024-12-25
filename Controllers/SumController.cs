@@ -23,13 +23,22 @@ public class SumController
 
     public async Task Handle(Message message, CancellationToken ct)
     {
-        var fileId = message.Text;
-        if (fileId == null)
+        if (string.IsNullOrEmpty(message.Text))
+        {
+            await _telegramClient.SendMessage(message.Chat.Id, "Сообщение не содержит текста. Пожалуйста, введите текст.", cancellationToken: ct);
             return;
-
-        await _textFileHandler.Download(fileId, ct);
+        }
+        //var fileId = message.Text;
+        //if (fileId == null)
+        //    return;
+        // Извлекаем текст от пользователя
+        string userText = message.Text;
 
         string userOption = _memoryStorage.GetSession(message.Chat.Id).Option; // Здесь получим опцию из сессии пользователя
+
+        // Вызываем метод Download для записи текста в файл
+        await _textFileHandler.Download(fileId: null, userText, ct);
+
         var result = _textFileHandler.Process(userOption); // Запустим обработку
         await _telegramClient.SendMessage(message.Chat.Id, result , cancellationToken: ct);
     }

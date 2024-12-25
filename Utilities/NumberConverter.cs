@@ -5,9 +5,9 @@
 /// </summary>
 public static class NumberConverter
 {
-    public static List<double> TryConvert(string path)
+    public static List<int> TryConvert(string path)
     {
-        List<double> numbers = new List<double>();
+        List<int> numbers = new List<int>();
 
         using (StreamReader sr = System.IO.File.OpenText(path))
         {
@@ -22,7 +22,7 @@ public static class NumberConverter
                 // Конвертируем элементы в числа
                 foreach (string sNumber in sNumbers)
                 {
-                    if (double.TryParse(sNumber, out double number))
+                    if (int.TryParse(sNumber, out int number))
                     {
                         numbers.Add(number); // Добавляем корректное число
                     }

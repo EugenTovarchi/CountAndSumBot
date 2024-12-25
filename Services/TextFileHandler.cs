@@ -15,14 +15,22 @@ public class TextFileHandler : IFileHandler
         _telegramBotClient = telegramBotClient;
     }
 
-    public async Task Download(string fileId, CancellationToken ct)
+    public async Task Download(string fileId, string userText, CancellationToken ct)
     {
         // Генерируем полный путь файла из конфигурации
         string inputTextFilePath = Path.Combine(_appSettings.DownloadsFolder,"CountAndSumBot",
             $"{_appSettings.TextFileName}.{_appSettings.TextFormat}");
 
         using (FileStream destinationStream = System.IO.File.Create(inputTextFilePath))
-        {
+        { 
+            // Логика записи текста от пользователя
+            if (!string.IsNullOrEmpty(userText))
+            {
+                using (StreamWriter writer = new StreamWriter(destinationStream))
+                {
+                    await writer.WriteLineAsync(userText); // Сохраняем текст пользователя
+                }
+            }
             // Загружаем информацию о файле
             var file = await _telegramBotClient.GetFile(fileId, ct);
             if (file.FilePath == null)
