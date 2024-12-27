@@ -26,17 +26,13 @@ public class SumController
         if (!string.IsNullOrEmpty(message.Text)) // Если сообщение содержит текст
         {
             try
-            {
-                // Сохраняем текст пользователя в файл
+            
                 await _textFileHandler.Download(message.Text, ct);
 
-                // Получаем выбранную пользователем опцию
                 string userOption = _memoryStorage.GetSession(message.Chat.Id).Option;
 
-                // Обрабатываем данные из файла
                 string result = _textFileHandler.Process(userOption);
 
-                // Отправляем результат пользователю
                 return result;
             }
             catch (Exception ex)
