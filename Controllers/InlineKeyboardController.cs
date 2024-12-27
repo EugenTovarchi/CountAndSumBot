@@ -27,7 +27,7 @@ internal class InlineKeyboardController
         // Генерим информационное сообщение
         string choose = callbackQuery.Data switch
         {
-            "Count" => " Счёт символов",
+            "Length" => "Счёт символов",
             "Sum" => "Сумируем цифры",
             _ => String.Empty
         };
@@ -39,12 +39,13 @@ internal class InlineKeyboardController
 
         if(choose == "Счёт символов")
         {
-            TextMessageController.userCommand = "count";
+            TextMessageController.userCommand = "Length";
         }
         else if (choose == "Сумируем цифры")
         {
-            TextMessageController.userCommand = "sum";
+            TextMessageController.userCommand = "Sum";
         }
+
 
     }
 }

@@ -21,10 +21,9 @@ public class LengthController
         _memoryStorage = memoryStorage;
     }
 
-    public async Task Handle(Message message, CancellationToken ct)
+    public async Task<int> Handle(Message message, CancellationToken ct)
     {
         Console.WriteLine($"Контроллер {GetType().Name} получил сообщение");
-        await _telegramClient.SendMessage(message.Chat.Id, $"Длина сообщения: {message.Text.Length} знаков",
-            cancellationToken: ct);
+        return message.Text.Length;
     }
 }

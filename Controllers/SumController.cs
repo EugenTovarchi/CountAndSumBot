@@ -21,25 +21,30 @@ public class SumController
         _memoryStorage = memoryStorage; 
     }
 
-    public async Task Handle(Message message, CancellationToken ct)
+    public async Task<string> Handle(Message message, CancellationToken ct)
     {
-        if (string.IsNullOrEmpty(message.Text))
+        if (!string.IsNullOrEmpty(message.Text)) // Если сообщение содержит текст
         {
-            await _telegramClient.SendMessage(message.Chat.Id, "Сообщение не содержит текста. Пожалуйста, введите текст.", cancellationToken: ct);
-            return;
+            try
+            {
+                // Сохраняем текст пользователя в файл
+                await _textFileHandler.Download(message.Text, ct);
+
+                // Получаем выбранную пользователем опцию
+                string userOption = _memoryStorage.GetSession(message.Chat.Id).Option;
+
+                // Обрабатываем данные из файла
+                string result = _textFileHandler.Process(userOption);
+
+                // Отправляем результат пользователю
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка при обработке данных: {ex.Message}");
+                return $"{ex.Message}";
+            }
         }
-        //var fileId = message.Text;
-        //if (fileId == null)
-        //    return;
-        // Извлекаем текст от пользователя
-        string userText = message.Text;
-
-        string userOption = _memoryStorage.GetSession(message.Chat.Id).Option; // Здесь получим опцию из сессии пользователя
-
-        // Вызываем метод Download для записи текста в файл
-        await _textFileHandler.Download(fileId: null, userText, ct);
-
-        var result = _textFileHandler.Process(userOption); // Запустим обработку
-        await _telegramClient.SendMessage(message.Chat.Id, result , cancellationToken: ct);
+        return "Пожалуйста, отправьте текст с цифрами.";
     }
 }

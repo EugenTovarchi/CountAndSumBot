@@ -32,8 +32,8 @@ internal class TextMessageController
                 var buttons = new List<InlineKeyboardButton[]>();
                 buttons.Add(new[]
                 {
-                        InlineKeyboardButton.WithCallbackData($"Счёт символов" , $"count"),
-                        InlineKeyboardButton.WithCallbackData($"Сумируем цифры" , $"sum"),
+                        InlineKeyboardButton.WithCallbackData($"Счёт символов" , $"Length"),
+                        InlineKeyboardButton.WithCallbackData($"Сумируем цифры" , $"Sum"),
                     });
 
                 // передаем кнопки вместе с сообщением (параметр ReplyMarkup)
@@ -42,18 +42,21 @@ internal class TextMessageController
                     $"{Environment.NewLine}А также может суммировать ваши цифры.{Environment.NewLine}",
                     cancellationToken: ct, parseMode: ParseMode.Html, replyMarkup: new InlineKeyboardMarkup(buttons));
                 break;
+        }
 
-            default:
-                await _telegramClient.SendMessage(message.Chat.Id, "Выберите опцию и напишите текст или цифры.", cancellationToken: ct);
-                break;
-        }
-        if (userCommand == "count")
+        if (userCommand == "Length")
         {
-            await _telegramClient.SendMessage(message.Chat.Id, $"Кол-во ваших символов: {_lengthController.Handle(message, ct)}");
+            int lengthResult = await _lengthController.Handle(message, ct);
+            await _telegramClient.SendMessage(message.Chat.Id, $"Кол-во ваших символов: {lengthResult}", cancellationToken: ct);
         }
-        else if (userCommand == "sum")
+        else if (userCommand == "Sum")
         {
-            await _telegramClient.SendMessage(message.Chat.Id, $"Сумма ваших цифр: {_sumController.Handle(message, ct)}");
+            string sumResult = await _sumController.Handle(message, ct);
+            await _telegramClient.SendMessage(
+                chatId: message.Chat.Id,
+                text: sumResult,
+                cancellationToken: ct
+            );
         }
         else
         {

@@ -22,7 +22,7 @@ public class MemoryStorage : IStorage
             return _sessions[chatId];
 
         // Создаем и возвращаем новую, если такой не было
-        var newSession = new Session() {Option = "Count"}; 
+        var newSession = new Session() {Option = "Sum"}; 
         _sessions.TryAdd(chatId, newSession);
         return newSession;
     }

@@ -15,29 +15,21 @@ public class TextFileHandler : IFileHandler
         _telegramBotClient = telegramBotClient;
     }
 
-    public async Task Download(string fileId, string userText, CancellationToken ct)
+    public async Task Download(string userText, CancellationToken ct)
     {
         // Генерируем полный путь файла из конфигурации
-        string inputTextFilePath = Path.Combine(_appSettings.DownloadsFolder,"CountAndSumBot",
+        string inputTextFilePath = Path.Combine(_appSettings.DownloadsFolder, "CountAndSumBot",
             $"{_appSettings.TextFileName}.{_appSettings.TextFormat}");
 
-        using (FileStream destinationStream = System.IO.File.Create(inputTextFilePath))
-        { 
-            // Логика записи текста от пользователя
-            if (!string.IsNullOrEmpty(userText))
-            {
-                using (StreamWriter writer = new StreamWriter(destinationStream))
-                {
-                    await writer.WriteLineAsync(userText); // Сохраняем текст пользователя
-                }
-            }
-            // Загружаем информацию о файле
-            var file = await _telegramBotClient.GetFile(fileId, ct);
-            if (file.FilePath == null)
-                return;
+        Directory.CreateDirectory(Path.GetDirectoryName(inputTextFilePath) ?? string.Empty);
 
-            // Скачиваем файл
-            await _telegramBotClient.DownloadFile(file.FilePath, destinationStream, ct);
+        if (!string.IsNullOrEmpty(userText))
+        {
+            await System.IO.File.WriteAllTextAsync(inputTextFilePath, userText, cancellationToken: ct);
+        }
+        else
+        {
+            throw new ArgumentException("Пользователь не ввел текст!");
         }
     }
 
@@ -46,11 +38,10 @@ public class TextFileHandler : IFileHandler
         string inputTextPath = Path.Combine(_appSettings.DownloadsFolder, "CountAndSumBot", $"{_appSettings.TextFileName}.{_appSettings.TextFormat}");
 
         Console.WriteLine("Начинаем конвертацию цифр...");
-        var userNumbers = NumberConverter.TryConvert(inputTextPath);//путь к файлу );
-        Console.WriteLine("Текст успешно конвертирован в цифры.");
+        var userNumbers = NumberConverter.TryConvert(inputTextPath);
 
         Console.WriteLine("Суммируем цифры...");
-        var numbersSum = SumNumbers.Sum(userNumbers);
+        var numbersSum = SumNumbers.Sum(userNumbers); 
         Console.WriteLine("Сумма определена");
         return numbersSum;
     }

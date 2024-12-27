@@ -5,10 +5,9 @@
 /// </summary>
 public static class SumNumbers
 {
-    // вывести на .ToString();
     public static string Sum(List<int> numbers)
     {
         int result = numbers.Sum(x => x);
-        return $"Сумма ваших чисел: {result}";
+        return $"Сумма ваших цифр: {result}";
     }
 }

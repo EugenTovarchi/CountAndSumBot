@@ -11,12 +11,11 @@ public static class NumberConverter
 
         using (StreamReader sr = System.IO.File.OpenText(path))
         {
-            while (!sr.EndOfStream) // Пока файл не закончился
+            while (!sr.EndOfStream) 
             {
                 // Читаем строку
                 string line = sr.ReadLine();
 
-                // Разделяем строку на элементы
                 string[] sNumbers = line.Split(' ');
 
                 // Конвертируем элементы в числа
@@ -24,11 +23,12 @@ public static class NumberConverter
                 {
                     if (int.TryParse(sNumber, out int number))
                     {
-                        numbers.Add(number); // Добавляем корректное число
+                        numbers.Add(number); 
                     }
                     else
                     {
                         Console.WriteLine($"Некорректное значение: {sNumber}");
+                        throw new Exception("Пожалуйста, отправьте текст с цифрами.");
                     }
                 }
             }
