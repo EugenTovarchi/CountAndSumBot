@@ -17,7 +17,7 @@ public class TextFileHandler : IFileHandler
 
     public async Task Download(string userText, CancellationToken ct)
     {
-        // Генерируем полный путь файла из конфигурации
+        //Полный путь файла из конфигурации
         string inputTextFilePath = Path.Combine(_appSettings.DownloadsFolder, "CountAndSumBot",
             $"{_appSettings.TextFileName}.{_appSettings.TextFormat}");
 
@@ -35,14 +35,14 @@ public class TextFileHandler : IFileHandler
 
     public string Process(string option)
     {
-        string inputTextPath = Path.Combine(_appSettings.DownloadsFolder, "CountAndSumBot", $"{_appSettings.TextFileName}.{_appSettings.TextFormat}");
+        string inputTextPath = Path.Combine(_appSettings.DownloadsFolder, "CountAndSumBot",
+            $"{_appSettings.TextFileName}.{_appSettings.TextFormat}");
 
         Console.WriteLine("Начинаем конвертацию цифр...");
         var userNumbers = NumberConverter.TryConvert(inputTextPath);
 
         Console.WriteLine("Суммируем цифры...");
         var numbersSum = SumNumbers.Sum(userNumbers); 
-        Console.WriteLine("Сумма определена");
         return numbersSum;
     }
 }

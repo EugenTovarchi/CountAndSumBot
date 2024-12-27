@@ -13,12 +13,9 @@ public static class NumberConverter
         {
             while (!sr.EndOfStream) 
             {
-                // Читаем строку
                 string line = sr.ReadLine();
-
                 string[] sNumbers = line.Split(' ');
 
-                // Конвертируем элементы в числа
                 foreach (string sNumber in sNumbers)
                 {
                     if (int.TryParse(sNumber, out int number))

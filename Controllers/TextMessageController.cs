@@ -23,7 +23,6 @@ internal class TextMessageController
 
     public async Task Handle(Message message, CancellationToken ct)
     {
-
         switch (message.Text)
         {
             case "/start":
@@ -52,19 +51,11 @@ internal class TextMessageController
         else if (userCommand == "Sum")
         {
             string sumResult = await _sumController.Handle(message, ct);
-            await _telegramClient.SendMessage(
-                chatId: message.Chat.Id,
-                text: sumResult,
-                cancellationToken: ct
-            );
+            await _telegramClient.SendMessage(chatId: message.Chat.Id,text: sumResult, cancellationToken: ct);
         }
         else
         {
-            await _telegramClient.SendMessage(
-                message.Chat.Id,
-                "Выберите действие, используя кнопки ниже.",
-                cancellationToken: ct
-            );
+            await _telegramClient.SendMessage(message.Chat.Id, "Выберите действие, используя кнопки ниже.", cancellationToken: ct);
         }
     }
 }

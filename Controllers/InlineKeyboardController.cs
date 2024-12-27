@@ -45,7 +45,5 @@ internal class InlineKeyboardController
         {
             TextMessageController.userCommand = "Sum";
         }
-
-
     }
 }
